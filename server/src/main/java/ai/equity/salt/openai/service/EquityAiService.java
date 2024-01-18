@@ -14,8 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static ai.equity.salt.openai.utils.DataAnalysis.*;
 import static ai.equity.salt.openai.utils.FileReader.readCSV;
@@ -26,7 +24,6 @@ import static ai.equity.salt.openai.utils.FileReader.readCSV;
 public class EquityAiService {
 
     private final OpenAiModelFactory openAiModelFactory;
-
     private final JpaEquityAiRepo repository;
     private static final String SYSTEM_MESSAGE = """
             Analyze the provided dataset, which includes positions, salaries, age, and locality to identify significant discrepancies. Focus on:
@@ -57,7 +54,7 @@ public class EquityAiService {
 
         var response = openAiModelFactory.createDefaultChatModel().generate(SYSTEM_MESSAGE + createPrompt(jobDataList));
 
-        return new EquityAiResponse<>("something", uniqueJobTitles, mostCommonJob, experienceDataPoints, locationDataPoints);
+        return new EquityAiResponse<>(response, uniqueJobTitles, mostCommonJob, experienceDataPoints, locationDataPoints);
     }
 
     private static String createPrompt(List<JobDataSet> jobDataList) {
