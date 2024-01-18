@@ -36,4 +36,8 @@ public class FileReader {
         }
         return jobDataList;
     }
+
+    private FileReader() {
+        throw new IllegalStateException("Utility class");
+    }
 }
