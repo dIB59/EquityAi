@@ -38,50 +38,36 @@ public class DataAnalysis {
                 .orElse(average);
     }
 
-    public static <T> List<SalaryDatapoint<T>> averageSalaryByDatapoint(List<JobDataSet> jobDataList, String mostCommonJob, Function<JobDataSet, T> getBydataPointFunction) {
+    public static <T> List<SalaryDatapoint<T>> averageSalaryByDatapoint(List<JobDataSet> jobDataList, String mostCommonJob, Function<JobDataSet, T> JobDataSetFunction) {
         Map<T, List<Double>> averageSalaryByDatapoint = jobDataList.stream()
                 .filter(data -> data.getPosition().equals(mostCommonJob))
                 .collect(Collectors.groupingBy(
-                        getBydataPointFunction,
+                        JobDataSetFunction,
                         Collectors.mapping(JobDataSet::getSalary, Collectors.toList())
                 ));
 
-        return averageSalaryByDatapoint.entrySet().stream()
-                .map(entry -> {
+        return averageSalaryByDatapoint.entrySet().stream().map(entry -> {
+
                     List<Double> salaries = entry.getValue();
+                    T datapoint = entry.getKey();
                     double average = calculateAverage(salaries);
                     double standardDeviation = calculateStandardDeviation(salaries, average);
-
                     double aboveAverage = findAboveAverage(salaries, average, standardDeviation);
                     double belowAverage = findBelowAverage(salaries, average, standardDeviation);
 
-                    return new SalaryDatapoint<>(
-                            entry.getKey(),
-                            new SalaryRangeDatapoint(
-                                    (double) Math.round(average * 100) / 100,
-                                    aboveAverage,
-                                    belowAverage
-                            )
-                    );
-                })
-                .toList();
+                    return new SalaryDatapoint<>(datapoint, new SalaryRangeDatapoint(average, aboveAverage, belowAverage));
+                }).toList();
     }
 
     public static List<String> findUniqueJobs(List<JobDataSet> jobDataList) {
-        Set<String> uniqueJobTitles = new HashSet<>();
-
-        for (JobDataSet jobData : jobDataList) {
-            String jobTitle = jobData.getPosition();
-            if (jobTitle != null && !jobTitle.isEmpty()) {
-                uniqueJobTitles.add(jobTitle);
-            }
-        }
-        return new ArrayList<>(uniqueJobTitles);
+        return jobDataList.stream()
+                .map(Optional::ofNullable).filter(Optional::isPresent).map(Optional::get)
+                .map(JobDataSet::getPosition)
+                .distinct().toList();
     }
 
     public static String mostCommonJob(List<String> jobTitles) {
-        return jobTitles
-                .stream()
+        return jobTitles.stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                 .entrySet()
                 .stream()
