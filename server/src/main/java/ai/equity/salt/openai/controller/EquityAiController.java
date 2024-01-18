@@ -27,7 +27,7 @@ public class EquityAiController {
 
     @PostMapping("file/analyze")
     @ResponseStatus(CREATED)
-    public EquityAiResponse sendFile(@RequestParam MultipartFile file) throws IOException, CsvValidationException {
+    public EquityAiResponse<Integer, String> sendFile(@RequestParam MultipartFile file) throws IOException, CsvValidationException {
         return service.analyzeFile(file);
     }
 
