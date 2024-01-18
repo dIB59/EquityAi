@@ -75,4 +75,8 @@ public class DataAnalysis {
                 .map(Map.Entry::getKey)
                 .orElse(null);
     }
+
+    private DataAnalysis() {
+        throw new IllegalStateException("Utility class");
+    }
 }
