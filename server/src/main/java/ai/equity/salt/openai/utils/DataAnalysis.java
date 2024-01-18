@@ -3,13 +3,14 @@ package ai.equity.salt.openai.utils;
 import ai.equity.salt.openai.controller.dto.JobDataSet;
 import ai.equity.salt.openai.controller.dto.SalaryDatapoint;
 import ai.equity.salt.openai.controller.dto.SalaryRangeDatapoint;
-import lombok.RequiredArgsConstructor;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+
 public class DataAnalysis {
 
     public static double calculateAverage(List<Double> salaries) {
