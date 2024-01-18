@@ -11,14 +11,14 @@ import java.util.List;
 
 import static ai.equity.salt.openai.utils.FileReader.readCSV;
 
-public class DataAnalysisUnitTest  {
+class DataAnalysisUnitTest  {
 
     @Test
     @SneakyThrows
     void test(){
 
         var dataSetFile = new File("src/test/java/ai/equity/salt/data/DataSet.csv");
-        Assertions.assertEquals(dataSetFile.toPath().getFileName().toString(), "DataSet.csv");
+        Assertions.assertEquals("ai/equity/salt/data/DataSet.csv", dataSetFile.toPath().getFileName().toString());
         Assertions.assertTrue(dataSetFile.exists());
 
         List<JobDataSet> jobDataList = readCSV(new FileInputStream(dataSetFile));
